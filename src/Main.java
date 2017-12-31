@@ -21,5 +21,7 @@ public class Main {
         System.out.println(rightList);*/
         Laptop.parseLaptop();
         System.out.println(Laptop.printLaptop());
+
+        //just to push
     }
 }
