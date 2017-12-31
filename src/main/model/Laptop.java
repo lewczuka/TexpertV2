@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,11 +38,14 @@ public class Laptop {
     }
 
     public static void parseLaptop() throws IOException {
-        String offline = "\"C:\\Users\\Adrian\\OneDrive\\Texpert\\Dell XPS 15 Touch 15.6_ Ultra Thin 4K Notebook Intel Core i7-7700HQ 2.8GHz 16 GB RAM 512 GB SSD NVIDIA GeForce GTX 1050 4GB Windows 10 Home - Newegg.ca.html\"";
-        String online = "https://www.newegg.ca/Product/Product.aspx?Item=9SIA66K6KY5646&cm_re=xps15-_-9SIA66K6KY5646-_-Product";
-        Connection connection = Jsoup.connect(online);
-        Document doc = connection.get();
+        String online = "https://www.newegg.ca/Product/Product.aspx?item=9SIA66K6KY5646";
+        //Connection connection = Jsoup.connect(online);
+        //Document doc = connection.get();
+
+        File offline = new File("C:\\Users\\Adrian\\OneDrive\\TexpertV2\\XPS15.html");
+        Document doc = Jsoup.parse(offline, "UTF-8");
         Element specs = doc.getElementById("Specs");
+        System.out.println(specs);
 
         org.jsoup.select.Elements left = specs.select("dt");
         List<String> leftList = left.eachText();
