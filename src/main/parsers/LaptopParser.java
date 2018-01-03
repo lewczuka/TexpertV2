@@ -16,8 +16,8 @@ import java.util.List;
 public class LaptopParser {
     private static List<String> urlList;
 
-    public static void loadURLs() throws IOException {
-        BufferedReader file = new BufferedReader(new FileReader("C:\\Users\\Adrian\\OneDrive\\TexpertV2\\data\\LaptopURLs"));
+    public static void loadURLs(String path) throws IOException {
+        BufferedReader file = new BufferedReader(new FileReader(path));
         String line;
 
         List<String> list = new ArrayList<>();
