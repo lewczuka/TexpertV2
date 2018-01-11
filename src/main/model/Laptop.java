@@ -1,79 +1,83 @@
 package main.model;
 
+import main.model.laptop.*;
+
 public class Laptop {
-    private String itemNumber;
-    private String name = "";
-    private static String brand = "";
-    private static String series = "";
-    private static String model = "";
-    private static String partNumber = "";
+    // TODO: revise field types...enums, ints, etc.
+    // TODO: potentially add WLAN, vid port, type, battery, style, backlit, webcam etc.
+    // TODO: account for nulls in constructors
 
-    private static String processorType = "";
-    private String processorSpeed = "";
-    private String processorName = "";
-    private String processorCores = "";
+    private String sellerID;
+    private Product product;
+    private CPU cpu;
+    private Display display;
+    private String os; // TODO: parse type and version separately
+    private GPU gpu;
+    private Storage storage;
+    private RAM ram;
+    private String opticalDrive;
+    private Ports ports;
 
-    private String screenSize = "";
-    private String touchscreen = "";
-    private String wideScreenSupport = "";
-    private String displayType = "";
-    private String resolution = "";
-    private String lcdFeatures = "";
-
-    private String operatingSystem = "";
-
-    private String GPU = "";
-    private String VRAM = "";
-
-    public Laptop(){
-    }
-
-    public static String getBrand() {
-        return brand;
-    }
-
-    public static void setBrand(String brand) {
-        Laptop.brand = brand;
-    }
-
-    public static String getSeries() {
-        return series;
-    }
-
-    public static void setSeries(String series) {
-        Laptop.series = series;
-    }
-
-    public static String getModel() {
-        return model;
-    }
-
-    public static void setModel(String model) {
-        Laptop.model = model;
-    }
-
-    public static String getPartNumber() {
-        return partNumber;
-    }
-
-    public static void setPartNumber(String partNumber) {
-        Laptop.partNumber = partNumber;
-    }
-
-    public static String getProcessorType() {
-        return processorType;
-    }
-
-    public static void setProcessorType(String processorType) {
-        Laptop.processorType = processorType;
+    public Laptop(String sellerID, Product product, CPU cpu, Display display, String os, GPU gpu, Storage storage, RAM ram, String opticalDrive, Ports ports) {
+        this.sellerID = sellerID;
+        this.product = product;
+        this.cpu = cpu;
+        this.display = display;
+        this.os = os;
+        this.gpu = gpu;
+        this.storage = storage;
+        this.ram = ram;
+        this.opticalDrive = opticalDrive;
+        this.ports = ports;
     }
 
     public void print(){
         System.out.println("----------");
-        System.out.println(brand);
-        System.out.println(series);
-        System.out.println(model);
-        System.out.println(partNumber);
-        System.out.println(processorType);
+        System.out.println("Seller ID: " + sellerID);
+        System.out.println("Product: " + product.getName());
+        System.out.println("CPU: " + cpu.getName());
+        System.out.println("Display: " + display.getName());
+        System.out.println("OS: " + os);
+        System.out.println("GPU: " + gpu.getName());
+        System.out.println("Storage: " + storage.getName());
+        System.out.println("RAM: " + ram.getName());
+        System.out.println(opticalDrive);
+        // TODO: add printout for ports
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public CPU getCpu() {
+        return cpu;
+    }
+
+    public Display getDisplay() {
+        return display;
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public GPU getGpu() {
+        return gpu;
+    }
+
+    public Storage getStorage() {
+        return storage;
+    }
+
+    public RAM getRam() {
+        return ram;
+    }
+
+    public String getOpticalDrive() {
+        return opticalDrive;
+    }
+
+    public Ports getPorts() {
+        return ports;
     }
 }

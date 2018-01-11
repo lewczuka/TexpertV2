@@ -1,6 +1,5 @@
 package test.parsers;
 
-import main.parsers.LaptopParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

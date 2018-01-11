@@ -1,7 +1,9 @@
+
 package main.parsers;
 
 import main.model.Laptop;
 import main.model.LaptopManager;
+import main.model.laptop.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,60 +15,88 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.parsers.CPUParser.parseCPU;
+import static main.parsers.ProductParser.parseProduct;
+
 public class LaptopParser {
-    private static List<String> urlList;
+    private List<String> urlList;
 
-    public static void loadURLs(String path) throws IOException {
-        BufferedReader file = new BufferedReader(new FileReader(path));
-        String line;
+    public LaptopParser(String filepath) throws IOException{
+        // TODO: handle IOException
+        BufferedReader URLs = new BufferedReader(new FileReader(filepath));
+        String URL;
 
-        List<String> list = new ArrayList<>();
-        while((line = file.readLine()) != null){
-            list.add(line.replaceAll("\"",""));
+        urlList = new ArrayList<>();
+        while((URL = URLs.readLine()) != null){
+            urlList.add(URL.replaceAll("\"",""));
         }
-
-        urlList = list;
     }
 
-    public static void parseLaptops() {
+    public void parseLaptops(){
+        // TODO: Delete quick info bcuz info repeats and parser takes first instance
+        int count = 0;
         for (String URL : urlList) {
             try {
                 parseLaptop(URL);
             } catch (IOException e) {
-                e.printStackTrace();
+                count++;
             }
         }
+        System.out.println(count + " laptops not parsed.");
     }
 
-    private static void parseLaptop(String URL) throws IOException {
-        Laptop laptop = new Laptop();
+    private void parseLaptop(String URL) throws IOException {
 
-        String online = "https://www.newegg.ca/Product/Product.aspx?item=9SIA66K6KY5646";
+        //String online = <<insert or build online URL>>;
         //Connection connection = Jsoup.connect(online);
         //Document doc = connection.get();
 
         File offline = new File(URL);
         Document doc = Jsoup.parse(offline, "UTF-8");
+
+        // Parsing spec table
         Element specs = doc.getElementById("Specs");
 
         org.jsoup.select.Elements left = specs.select("dt");
         List<String> leftList = left.eachText();
-
         org.jsoup.select.Elements right = specs.select("dd");
         List<String> rightList = right.eachText();
+
+        // Parsing header line
+        Element header = doc.getElementById("baBreadcrumbTop");
+
+        org.jsoup.select.Elements headerID = header.select("em");
+        List<String> headerIDList = headerID.eachText();
+
+        String tempSellerID = headerIDList.get(0);// TODO: check this
+
+        String tempOS = null;
+        String tempOpticalDrive = null;
 
         for (int i = 0; i < leftList.size() ; i++) {
             String feature = leftList.get(i);
             switch (feature) {
-                case "Brand" : laptop.setBrand(rightList.get(i));
-                case "Series" : laptop.setSeries(rightList.get(i));
-                case "Model" : laptop.setModel(rightList.get(i));
-                case "Part Number" : laptop.setPartNumber(rightList.get(i));
-                case "CPU Type" : laptop.setProcessorType(rightList.get(i));
+                case "Operating System" : tempOS = rightList.get(i);
+                case "Optical Drive Type" : tempOpticalDrive = rightList.get(i);
             }
         }
 
-        LaptopManager.getInstance().addLaptop(laptop);
+        Product tempProduct = parseProduct(leftList, rightList);
+        CPU tempCPU = parseCPU(leftList, rightList);
+        Display tempDisplay = parseDisplay(leftList, rightList);
+        GPU tempGPU = parseGPU(leftList, rightList);
+        Storage tempStorage = parseStorage(leftList, rightList);
+        RAM tempRAM = parseRAM(leftList, rightList);
+        Ports tempPorts = parsePorts(leftList, rightList);
+
+        Laptop tempLaptop = new Laptop(tempSellerID, tempProduct, tempCPU, tempDisplay, tempOS, tempGPU, tempStorage, tempRAM, tempOpticalDrive, tempPorts);
+        LaptopManager.getInstance().addLaptop(tempLaptop);
     }
+
+    protected static Dimensions parseDimensions(String dimensionString) {
+        // TODO: parse dimensions with regex
+    }
+
+
 
 }
