@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.parsers.CPUParser.parseCPU;
+import static main.parsers.DisplayParser.parseDisplay;
 import static main.parsers.ProductParser.parseProduct;
 
 public class LaptopParser {
