@@ -17,7 +17,11 @@ import java.util.List;
 
 import static main.parsers.CPUParser.parseCPU;
 import static main.parsers.DisplayParser.parseDisplay;
+import static main.parsers.GPUParser.parseGPU;
+import static main.parsers.PortsParser.parsePorts;
 import static main.parsers.ProductParser.parseProduct;
+import static main.parsers.RAMParser.parseRAM;
+import static main.parsers.StorageParser.parseStorage;
 
 public class LaptopParser {
     private List<String> urlList;
@@ -60,6 +64,7 @@ public class LaptopParser {
 
         org.jsoup.select.Elements left = specs.select("dt");
         List<String> leftList = left.eachText();
+
         org.jsoup.select.Elements right = specs.select("dd");
         List<String> rightList = right.eachText();
 
@@ -93,11 +98,4 @@ public class LaptopParser {
         Laptop tempLaptop = new Laptop(tempSellerID, tempProduct, tempCPU, tempDisplay, tempOS, tempGPU, tempStorage, tempRAM, tempOpticalDrive, tempPorts);
         LaptopManager.getInstance().addLaptop(tempLaptop);
     }
-
-    protected static Dimensions parseDimensions(String dimensionString) {
-        // TODO: parse dimensions with regex
-    }
-
-
-
 }

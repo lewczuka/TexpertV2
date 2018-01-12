@@ -22,14 +22,16 @@ public class DisplayParser {
             switch (feature) {
                 case "Screen Size":
                     tempSize = parseSize(rightList.get(i));
+                    break;
                 case "Touchscreen":
                     tempTouch = parseTouch(rightList.get(i));
+                    break;
                 case "Resolution": tempRes = rightList.get(i);
             }
-
-            tempResWidth = parseWidth(tempRes);
-            tempResHeight = parseHeight(tempRes);
         }
+
+        tempResWidth = parseWidth(tempRes);
+        tempResHeight = parseHeight(tempRes);
 
         return new Display(tempSize, tempTouch, tempRes, tempResWidth, tempResHeight);
     }

@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 public class CPUParser {
 
     protected static CPU parseCPU(List<String> leftList, List<String> rightList) {
+        System.out.println("Comp: " + rightList.get(0));
         // TODO: add an error output option
         String tempType = null;
         double tempSpeed = 0;
@@ -19,8 +20,10 @@ public class CPUParser {
             switch (feature) {
                 case "CPU Type":
                     tempType = rightList.get(i);
+                    break;
                 case "CPU Speed":
                     tempSpeed = parseSpeed(rightList.get(i));
+                    break;
                 case "Number of Cores": tempCores = parseCores(rightList.get(i));
             }
         }
@@ -29,13 +32,14 @@ public class CPUParser {
         if (tempType != null
                 && tempSpeed != 0
                 && tempCores != 0)
-        tempCPU = new CPU(tempType, tempSpeed, tempCores);
+            tempCPU = new CPU(tempType, tempSpeed, tempCores);
 
         return tempCPU;
     }
 
     private static double parseSpeed(String input){
-        Pattern speedPattern = Pattern.compile("\\d*\\.\\d*");
+        System.out.println("Speed input: " + input);
+        Pattern speedPattern = Pattern.compile("\\d*\\.\\d*"); // change to (\d*\.?\d*)\s for no decimal???
         Matcher speedMatcher = speedPattern.matcher(input);
         speedMatcher.find();
         String match = speedMatcher.group(0);
