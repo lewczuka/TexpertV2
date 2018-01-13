@@ -34,7 +34,7 @@ public class RAMParser {
     }
 
     private static double parseAmount(String input){
-        Pattern amountPattern = Pattern.compile("(\\d+)\\s([A-Z])B");
+        Pattern amountPattern = Pattern.compile("(\\d+)\\s?([A-Z])B");
         Matcher amountMatcher = amountPattern.matcher(input);
         amountMatcher.find();
         String match = amountMatcher.group(1);

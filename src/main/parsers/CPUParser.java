@@ -38,11 +38,10 @@ public class CPUParser {
     }
 
     private static double parseSpeed(String input){
-        System.out.println("Speed input: " + input);
-        Pattern speedPattern = Pattern.compile("\\d*\\.\\d*"); // change to (\d*\.?\d*)\s for no decimal???
+        Pattern speedPattern = Pattern.compile("(\\d+\\.?\\d*)\\s"); // change to (\d*\.?\d*)\s for no decimal???
         Matcher speedMatcher = speedPattern.matcher(input);
         speedMatcher.find();
-        String match = speedMatcher.group(0);
+        String match = speedMatcher.group(1);
         double speed = Double.parseDouble(match);
         return speed;
     }
