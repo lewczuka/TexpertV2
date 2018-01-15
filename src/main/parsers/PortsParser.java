@@ -7,9 +7,9 @@ import java.util.List;
 public class PortsParser {
 
     protected static Ports parsePorts(List<String> leftList, List<String> rightList){
-        String tempPortUSB = null;
-        String tempPortHDMI = null;
-        String tempPortAudio = null;
+        String tempPortUSB = "";
+        String tempPortHDMI = "";
+        String tempPortAudio = "";
 
         for (int i = 0; i < leftList.size(); i++) {
             String feature = leftList.get(i);
@@ -24,12 +24,6 @@ public class PortsParser {
             }
         }
 
-        Ports tempPorts = null;
-        if (tempPortUSB != null
-                && tempPortHDMI != null
-                && tempPortAudio != null)
-            tempPorts = new Ports (tempPortUSB, tempPortHDMI, tempPortAudio);
-
-        return tempPorts;
+        return new Ports (tempPortUSB, tempPortHDMI, tempPortAudio);
     }
 }

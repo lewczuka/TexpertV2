@@ -6,12 +6,12 @@ public class Display {
     private String name;
 
     private double size; // in inches
-    private boolean touch;
+    private String touch;
     private String res; // width by height
     private int resWidth; // in pixels
     private int resHeight; // in pixels
 
-    public Display(double size, boolean touch, String res, int resWidth, int resHeight) {
+    public Display(double size, String touch, String res, int resWidth, int resHeight) {
         this.size = size;
         this.touch = touch;
         this.res = res;
@@ -22,6 +22,12 @@ public class Display {
     }
 
     public String getName() {
+        if (size == 0.0
+                && touch.equals("")
+                && res.equals("")
+                && resWidth == 0
+                && resHeight == 0)
+            return "Not available.";
         return name;
     }
 
@@ -29,7 +35,7 @@ public class Display {
         return size;
     }
 
-    public boolean isTouch() {
+    public String isTouch() {
         return touch;
     }
 
@@ -45,9 +51,9 @@ public class Display {
         return resHeight;
     }
 
-    private String printTouch(boolean touch){
-        if (touch)
-            return " Touch";
-        else return "";
+    private String printTouch(String touch){
+        if (touch.equals("Yes"))
+            return "Touchscreen";
+        return "";
     }
 }

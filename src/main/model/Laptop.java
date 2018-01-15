@@ -41,7 +41,7 @@ public class Laptop {
         System.out.println("GPU: " + gpu.getName());
         System.out.println("Storage: " + storage.getName());
         System.out.println("RAM: " + ram.getName());
-        System.out.println(opticalDrive);
+        System.out.println("Optical Drive: " + opticalDrive);
         // TODO: add printout for ports
     }
 

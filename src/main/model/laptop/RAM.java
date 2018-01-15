@@ -14,6 +14,9 @@ public class RAM {
     }
 
     public String getName() {
+        if (amount == 0.0
+                && speed.equals(""))
+            return "Not available.";
         return name;
     }
 

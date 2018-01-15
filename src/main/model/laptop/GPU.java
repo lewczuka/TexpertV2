@@ -5,7 +5,7 @@ public class GPU {
     private String name;
     private String type;
     private String chip; // TODO: add more info...brand, etc.
-    private int vram; // TODO: add more info...type, speed, etc.
+    private int vram; // if 0 then shared, TODO: add more info...type, speed, etc.
 
     public GPU(String type, String chip, int vram) {
         this.type = type;
@@ -16,6 +16,10 @@ public class GPU {
     }
 
     public String getName() {
+        if (type.equals("")
+                && chip.equals("")
+                && vram == 0)
+            return "Not available.";
         return name;
     }
 

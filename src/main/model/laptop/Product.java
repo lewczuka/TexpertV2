@@ -24,6 +24,10 @@ public class Product {
     }
 
     public String getName() {
+        if (brand.equals("")
+                && series.equals("")
+                && model.equals(""))
+            return "Not available.";
         return name;
     }
 

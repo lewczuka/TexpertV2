@@ -1,5 +1,6 @@
 package main.parsers;
 
+import main.exception.ParsingException;
 import main.model.laptop.Storage;
 
 import java.util.List;
@@ -9,10 +10,9 @@ import java.util.regex.Pattern;
 public class StorageParser {
 
     protected static Storage parseStorage(List<String> leftList, List<String> rightList) {
-        // TODO: add an error output option
-        String tempSSD = null;
+        String tempSSD = "";
         int tempSSDAmount = 0;
-        String tempHDD = null;
+        String tempHDD = "";
         int tempHDDAmount = 0;
 
         for (int i = 0; i < leftList.size(); i++) {
@@ -20,49 +20,45 @@ public class StorageParser {
             switch (feature) {
                 case "SSD":
                     tempSSD = rightList.get(i);
+                    try {
+                        tempSSDAmount = parseAmount(tempSSD);
+                    } catch (ParsingException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case "HDD":
                     tempHDD = rightList.get(i);
+                    try {
+                        tempHDDAmount = parseAmount(tempHDD);
+                    } catch (ParsingException e) {
+                        System.out.println(e.getMessage());
+                    }
             }
         }
-
-        if (tempSSD != null)
-            tempSSDAmount = parseAmount(tempSSD);
-        if (tempHDD != null)
-            tempHDDAmount = parseAmount(tempHDD);
-
-        Storage tempStorage = null;
-        if (tempSSD != null
-                && tempSSDAmount != 0
-                && tempHDD != null
-                && tempHDDAmount != 0)
-            tempStorage = new Storage(tempSSD, tempSSDAmount, tempHDD, tempHDDAmount);
-
-        return tempStorage;
+        return new Storage(tempSSD, tempSSDAmount, tempHDD, tempHDDAmount);
     }
 
-    private static int parseAmount(String input) {
-        Pattern amountPattern = Pattern.compile("(\\d+)\\s([A-Z])B");
+    private static int parseAmount(String input) throws ParsingException {
+        Pattern amountPattern = Pattern.compile("(\\d+)\\s?([A-Z])B");
         Matcher amountMatcher = amountPattern.matcher(input);
-        String match = null;
-        String unit = null;
 
         if (amountMatcher.find()) {
-            match = amountMatcher.group(1);
-            unit = amountMatcher.group(2);
-        }
-        int multiplier = 0;
+            String match = amountMatcher.group(1);
+            String unit = amountMatcher.group(2);
 
-        if (match != null && unit != null) {
+            int multiplier;
             if (unit.equals("T"))
                 // Can only be TB or GB
                 multiplier = 1000;
             else multiplier = 1;
+
+            int amount = Integer.parseInt(match) * multiplier;
+            return amount;
         }
 
-        int amount = 0;
-        if (multiplier != 0)
-            amount = Integer.parseInt(match) * multiplier;
-        return amount;
+        if(input.contains("No"))
+            return 0;
+
+        throw new ParsingException("Storage amount not found, input: " + input);
     }
 }

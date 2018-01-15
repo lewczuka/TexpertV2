@@ -16,6 +16,10 @@ public class CPU {
     }
 
     public String getName() {
+        if (type.equals("")
+                && speed == 0.0
+                && cores == 0)
+            return "Not available.";
         return name;
     }
 

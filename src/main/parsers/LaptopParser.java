@@ -8,10 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +23,28 @@ import static main.parsers.StorageParser.parseStorage;
 public class LaptopParser {
     private List<String> urlList;
 
-    public LaptopParser(String filepath) throws IOException{
-        // TODO: handle IOException
-        BufferedReader URLs = new BufferedReader(new FileReader(filepath));
+    public LaptopParser(String filepath) {
+        BufferedReader URLs = null;
+        try {
+            URLs = new BufferedReader(new FileReader(filepath));
+        } catch (FileNotFoundException e) {
+            System.out.println("File cannot be read.");
+        }
         String URL;
 
         urlList = new ArrayList<>();
-        while((URL = URLs.readLine()) != null){
-            urlList.add(URL.replaceAll("\"",""));
+        int count = 0;
+        try {
+            while((URL = URLs.readLine()) != null){
+                urlList.add(URL.replaceAll("\"",""));
+            }
+        } catch (IOException e) {
+            count++;
         }
+        System.out.println(count + " URLs not accessible.");
     }
 
     public void parseLaptops(){
-        // TODO: Delete quick info bcuz info repeats and parser takes first instance
         int count = 0;
         for (String URL : urlList) {
             try {
@@ -61,28 +67,26 @@ public class LaptopParser {
 
         // Parsing spec table
         Element specs = doc.getElementById("Specs");
-
         org.jsoup.select.Elements left = specs.select("dt");
         List<String> leftList = left.eachText();
-
         org.jsoup.select.Elements right = specs.select("dd");
         List<String> rightList = right.eachText();
 
         // Parsing header line
         Element header = doc.getElementById("baBreadcrumbTop");
-
         org.jsoup.select.Elements headerID = header.select("em");
         List<String> headerIDList = headerID.eachText();
 
-        String tempSellerID = headerIDList.get(0);// TODO: check this
+        String tempSellerID = headerIDList.get(0);
 
-        String tempOS = null;
-        String tempOpticalDrive = null;
+        String tempOS = "Not available.";
+        String tempOpticalDrive = "Not available.";
 
         for (int i = 0; i < leftList.size() ; i++) {
             String feature = leftList.get(i);
             switch (feature) {
                 case "Operating System" : tempOS = rightList.get(i);
+                break;
                 case "Optical Drive Type" : tempOpticalDrive = rightList.get(i);
             }
         }

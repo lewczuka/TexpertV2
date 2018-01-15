@@ -1,5 +1,6 @@
 package main.parsers;
 
+import main.exception.ParsingException;
 import main.model.laptop.GPU;
 
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.regex.Pattern;
 public class GPUParser {
 
     protected static GPU parseGPU(List<String> leftList, List<String> rightList){
-        String tempType = null;
-        String tempChip = null;
+        String tempType = "";
+        String tempChip = "";
         int tempVRAM = 0;
 
         for (int i = 0; i < leftList.size(); i++) {
@@ -22,32 +23,29 @@ public class GPUParser {
                 case "GPU/VPU":
                     tempChip = rightList.get(i);
                     break;
-                case "Video Memory": tempVRAM = parseVRAM(rightList.get(i));
+                case "Video Memory":
+                    try {
+                        tempVRAM = parseVRAM(rightList.get(i));
+                    } catch (ParsingException e) {
+                        System.out.println(e.getMessage());
+                    }
             }
         }
-
-        GPU tempGPU = null;
-        if (tempType != null
-                && tempChip != null
-                && tempVRAM != 0)
-            tempGPU = new GPU(tempType, tempChip, tempVRAM);
-
-        return tempGPU;
+       return new GPU(tempType, tempChip, tempVRAM);
     }
 
-    private static int parseVRAM(String input) {
-        // TODO: modify for shared VRAM
+    private static int parseVRAM(String input) throws ParsingException {
         Pattern vramPattern = Pattern.compile("\\d+");
         Matcher vramMatcher = vramPattern.matcher(input);
-        vramMatcher.find();
-        try {
+        if(vramMatcher.find()){
             String match = vramMatcher.group(0);
             int vram = Integer.parseInt(match);
-        } catch (IllegalStateException e) {
-            System.out.println("VRAM cannot be parsed");
+            return vram;
         }
-        int vram = 0;
-        // TODO: this is a temporary fix for shared memory
-        return vram;
+        if (input.contains("Shared")){
+            int vram = 0;
+            return vram;
+        }
+        throw new ParsingException("GPU VRAM not found, input: " + input);
     }
 }

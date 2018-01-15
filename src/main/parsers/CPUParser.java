@@ -1,5 +1,6 @@
 package main.parsers;
 
+import main.exception.ParsingException;
 import main.model.laptop.CPU;
 
 import java.util.List;
@@ -9,10 +10,8 @@ import java.util.regex.Pattern;
 public class CPUParser {
 
     protected static CPU parseCPU(List<String> leftList, List<String> rightList) {
-        System.out.println("Comp: " + rightList.get(0));
-        // TODO: add an error output option
-        String tempType = null;
-        double tempSpeed = 0;
+        String tempType = "";
+        double tempSpeed = 0.0;
         int tempCores = 0;
 
         for (int i = 0; i < leftList.size(); i++) {
@@ -22,43 +21,42 @@ public class CPUParser {
                     tempType = rightList.get(i);
                     break;
                 case "CPU Speed":
-                    tempSpeed = parseSpeed(rightList.get(i));
+                    try {
+                        tempSpeed = parseSpeed(rightList.get(i));
+                    } catch (ParsingException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
-                case "Number of Cores": tempCores = parseCores(rightList.get(i));
+                case "Number of Cores":
+                    try {
+                        tempCores = parseCores(rightList.get(i));
+                    } catch (ParsingException e) {
+                        System.out.println(e.getMessage());
+                    }
             }
         }
-
-        CPU tempCPU = null;
-        if (tempType != null
-                && tempSpeed != 0
-                && tempCores != 0)
-            tempCPU = new CPU(tempType, tempSpeed, tempCores);
-
-        return tempCPU;
+        return new CPU(tempType, tempSpeed, tempCores);
     }
 
-    private static double parseSpeed(String input){
-        Pattern speedPattern = Pattern.compile("(\\d+\\.?\\d*)\\s"); // change to (\d*\.?\d*)\s for no decimal???
+    private static double parseSpeed(String input) throws ParsingException {
+        Pattern speedPattern = Pattern.compile("(\\d+\\.?\\d*)\\s");
         Matcher speedMatcher = speedPattern.matcher(input);
-        speedMatcher.find();
-        String match = speedMatcher.group(1);
-        double speed = Double.parseDouble(match);
-        return speed;
+        if(speedMatcher.find()){
+            String match = speedMatcher.group(1);
+            double speed = Double.parseDouble(match);
+            return speed;
+        }
+        throw new ParsingException("CPU speed not found, input: " + input);
     }
 
-    private static int parseCores(String input){
-        int cores = 0;
+    private static int parseCores(String input) throws ParsingException {
         switch(input){
-            case "Single-core Processor": cores = 1;
-            break;
-            case "Dual-core Processor": cores = 2;
-            break;
-            case "Quad-core Processor": cores = 3;
-            break;
-            case "8-core Processor": cores = 4;
-            break;
+            case "Single-core Processor": return 1;
+            case "Dual-core Processor": return 2;
+            case "Quad-core Processor": return 3;
+            case "8-core Processor": return 4;
+            default: throw new ParsingException("CPU cores not found, input: " + input);
         }
-        return cores;
     }
 
 }

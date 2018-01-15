@@ -18,6 +18,9 @@ public class Storage {
     }
 
     public String getName() {
+        if (ssd.equals("")
+                && hdd.equals(""))
+            return "Not available.";
         return name;
     }
 
